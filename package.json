@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +15,11 @@
   "devDependencies": {
     "@csendin/eslint-config": "^1.0.0",
     "@types/node": "^22.10.5",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vite-tsconfig-paths": "^4.2.0",
+    "vitest": "^0.34.2"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13"
   }
 }
