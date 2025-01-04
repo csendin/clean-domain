@@ -1,7 +1,7 @@
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 import { Answer } from '@/domain/enterprise/entities/answer'
 
-import { AnswersRepository } from '../repositories/answers-repository'
+import { AnswersRepository } from '../../repositories/answers-repository'
 
 interface AnswerQuestionRequest {
     content: string
