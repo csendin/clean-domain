@@ -31,12 +31,16 @@ describe('Fetch Answer Comments', () => {
             }),
         )
 
-        const { answerComments } = await fetchAnswerComment.execute({
+        const res = await fetchAnswerComment.execute({
             answerId: 'answer-1',
             page: 1,
         })
 
-        expect(answerComments).toHaveLength(3)
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(res.value.answerComments).toHaveLength(3)
+        }
     })
 
     it('should be able to fetch paginated answer comments', async () => {
@@ -48,11 +52,15 @@ describe('Fetch Answer Comments', () => {
             )
         }
 
-        const { answerComments } = await fetchAnswerComment.execute({
+        const res = await fetchAnswerComment.execute({
             answerId: 'answer-1',
             page: 2,
         })
 
-        expect(answerComments).toHaveLength(2)
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(res.value.answerComments).toHaveLength(2)
+        }
     })
 })

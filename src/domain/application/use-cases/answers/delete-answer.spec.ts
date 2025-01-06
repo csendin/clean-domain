@@ -3,6 +3,7 @@ import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-r
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
+import { NotAllowedError } from '../../errors/not-allowed-error'
 import { DeleteAnswerUseCase } from './delete-answer'
 
 let answersRepository: InMemoryAnswersRepository
@@ -34,11 +35,12 @@ describe('Delete Answer', () => {
 
         await answersRepository.create(newAnswer)
 
-        expect(() => {
-            return deleteAnswer.execute({
-                authorId: 'author-02',
-                answerId: newAnswer.id.toString(),
-            })
-        }).rejects.toBeInstanceOf(Error)
+        const res = await deleteAnswer.execute({
+            authorId: 'author-02',
+            answerId: newAnswer.id.toString(),
+        })
+
+        expect(res.isLeft()).toBe(true)
+        expect(res.value).toBeInstanceOf(NotAllowedError)
     })
 })

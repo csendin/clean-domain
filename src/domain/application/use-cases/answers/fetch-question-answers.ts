@@ -1,3 +1,4 @@
+import { Either, right } from '@/core/either'
 import { Answer } from '@/domain/enterprise/entities/answer'
 
 import { AnswersRepository } from '../../repositories/answers-repository'
@@ -7,9 +8,12 @@ interface FetchQuestionAnswersRequest {
     page: number
 }
 
-interface FetchQuestionAnswersResponse {
-    answers: Answer[]
-}
+type FetchQuestionAnswersResponse = Either<
+    null,
+    {
+        answers: Answer[]
+    }
+>
 
 export class FetchQuestionAnswersUseCase {
     constructor(private answersRepository: AnswersRepository) {}
@@ -17,6 +21,6 @@ export class FetchQuestionAnswersUseCase {
     async execute({ questionId, page }: FetchQuestionAnswersRequest): Promise<FetchQuestionAnswersResponse> {
         const answers = await this.answersRepository.findMany(questionId, { page })
 
-        return { answers }
+        return right({ answers })
     }
 }

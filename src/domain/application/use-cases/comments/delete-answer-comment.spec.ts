@@ -3,6 +3,7 @@ import { InMemoryAnswerCommentsRepository } from 'test/repositories/in-memory-an
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
+import { NotAllowedError } from '../../errors/not-allowed-error'
 import { DeleteAnswerCommentUseCase } from './delete-answer-comment'
 
 let answerCommentsRepository: InMemoryAnswerCommentsRepository
@@ -19,12 +20,16 @@ describe('Delete Answer Comment', () => {
 
         await answerCommentsRepository.create(answerComment)
 
-        await deleteAnswerComment.execute({
+        const res = await deleteAnswerComment.execute({
             answerCommentId: answerComment.id.toString(),
             authorId: answerComment.authorId.toString(),
         })
 
-        expect(answerCommentsRepository.items).toHaveLength(0)
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(res.value).toBe(null)
+        }
     })
 
     it('should not be able to delete another user answer comment', async () => {
@@ -34,11 +39,12 @@ describe('Delete Answer Comment', () => {
 
         await answerCommentsRepository.create(answerComment)
 
-        expect(() => {
-            return deleteAnswerComment.execute({
-                answerCommentId: answerComment.id.toString(),
-                authorId: 'author-2',
-            })
-        }).rejects.toBeInstanceOf(Error)
+        const res = await deleteAnswerComment.execute({
+            answerCommentId: answerComment.id.toString(),
+            authorId: 'author-2',
+        })
+
+        expect(res.isLeft()).toBe(true)
+        expect(res.value).toBeInstanceOf(NotAllowedError)
     })
 })

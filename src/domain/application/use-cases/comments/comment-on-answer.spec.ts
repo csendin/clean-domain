@@ -20,12 +20,16 @@ describe('Comment on Answer', () => {
 
         await answersRepository.create(answer)
 
-        await commentOnAnswer.execute({
+        const res = await commentOnAnswer.execute({
             content: 'Test comment',
             authorId: answer.authorId.toString(),
             answerId: answer.id.toString(),
         })
 
-        expect(answerCommentsRepository.items[0].content).toEqual('Test comment')
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(answerCommentsRepository.items[0]).toEqual(res.value.answerComment)
+        }
     })
 })

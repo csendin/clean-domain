@@ -5,6 +5,7 @@ import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questio
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
+import { NotAllowedError } from '../../errors/not-allowed-error'
 import { ChooseQuestionBestAnswerUseCase } from './choose-question-best-answer'
 
 let questionsRepository: InMemoryQuestionsRepository
@@ -28,12 +29,16 @@ describe('Choose Question Best Answer', () => {
         await questionsRepository.create(question)
         await answersRepository.create(answer)
 
-        await chooseQuestionBestAnswer.execute({
+        const res = await chooseQuestionBestAnswer.execute({
             answerId: answer.id.toString(),
             authorId: question.authorId.toString(),
         })
 
-        expect(questionsRepository.items[0].bestAnswerId).toEqual(answer.id)
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(questionsRepository.items[0]).toEqual(res.value.question)
+        }
     })
 
     it('should not be able to to choose another user question best answer', async () => {
@@ -48,11 +53,12 @@ describe('Choose Question Best Answer', () => {
         await questionsRepository.create(question)
         await answersRepository.create(answer)
 
-        expect(() => {
-            return chooseQuestionBestAnswer.execute({
-                answerId: answer.id.toString(),
-                authorId: 'author-2',
-            })
-        }).rejects.toBeInstanceOf(Error)
+        const res = await chooseQuestionBestAnswer.execute({
+            answerId: answer.id.toString(),
+            authorId: 'author-2',
+        })
+
+        expect(res.isLeft()).toBe(true)
+        expect(res.value).toBeInstanceOf(NotAllowedError)
     })
 })

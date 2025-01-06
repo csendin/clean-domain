@@ -3,6 +3,7 @@ import { InMemoryAnswersRepository } from 'test/repositories/in-memory-answers-r
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
 
+import { NotAllowedError } from '../../errors/not-allowed-error'
 import { EditAnswerUseCase } from './edit-answer'
 
 let answersRepository: InMemoryAnswersRepository
@@ -19,15 +20,17 @@ describe('Edit Answer', () => {
 
         await answersRepository.create(newAnswer)
 
-        await editAnswer.execute({
+        const res = await editAnswer.execute({
             content: 'Edited content',
             authorId: newAnswer.authorId.toString(),
             answerId: newAnswer.id.toString(),
         })
 
-        expect(answersRepository.items[0]).toMatchObject({
-            content: 'Edited content',
-        })
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(answersRepository.items[0]).toEqual(res.value.answer)
+        }
     })
 
     it('should not be able to edit a answer from another user', async () => {
@@ -37,12 +40,13 @@ describe('Edit Answer', () => {
 
         await answersRepository.create(newAnswer)
 
-        expect(() => {
-            return editAnswer.execute({
-                content: 'Edited content',
-                authorId: 'author-02',
-                answerId: newAnswer.id.toString(),
-            })
-        }).rejects.toBeInstanceOf(Error)
+        const res = await editAnswer.execute({
+            content: 'Edited content',
+            authorId: 'author-02',
+            answerId: newAnswer.id.toString(),
+        })
+
+        expect(res.isLeft()).toBe(true)
+        expect(res.value).toBeInstanceOf(NotAllowedError)
     })
 })

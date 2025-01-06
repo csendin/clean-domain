@@ -17,15 +17,19 @@ describe('Fetch Recent Questions', () => {
         await questionsRepository.create(makeQuestion({ createdAt: new Date(2024, 0, 18) }))
         await questionsRepository.create(makeQuestion({ createdAt: new Date(2024, 0, 23) }))
 
-        const { questions } = await fetchRecentQuestions.execute({
+        const res = await fetchRecentQuestions.execute({
             page: 1,
         })
 
-        expect(questions).toEqual([
-            expect.objectContaining({ createdAt: new Date(2024, 0, 23) }),
-            expect.objectContaining({ createdAt: new Date(2024, 0, 20) }),
-            expect.objectContaining({ createdAt: new Date(2024, 0, 18) }),
-        ])
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(res.value.questions).toEqual([
+                expect.objectContaining({ createdAt: new Date(2024, 0, 23) }),
+                expect.objectContaining({ createdAt: new Date(2024, 0, 20) }),
+                expect.objectContaining({ createdAt: new Date(2024, 0, 18) }),
+            ])
+        }
     })
 
     it('should be able to fetch paginated recent questions', async () => {
@@ -33,10 +37,14 @@ describe('Fetch Recent Questions', () => {
             await questionsRepository.create(makeQuestion())
         }
 
-        const { questions } = await fetchRecentQuestions.execute({
+        const res = await fetchRecentQuestions.execute({
             page: 2,
         })
 
-        expect(questions).toHaveLength(2)
+        expect(res.isRight()).toBe(true)
+
+        if (res.isRight()) {
+            expect(res.value.questions).toHaveLength(2)
+        }
     })
 })
