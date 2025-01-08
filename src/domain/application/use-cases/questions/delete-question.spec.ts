@@ -1,4 +1,6 @@
 import { makeQuestion } from 'test/factories/make-question'
+import { makeQuestionAttachment } from 'test/factories/make-question-attachments'
+import { InMemoryQuestionAttachmentsRepository } from 'test/repositories/in-memory-question-attachments-repository'
 import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
 
 import { UniqueEntityId } from '@/core/entities/unique-entity-id'
@@ -7,11 +9,13 @@ import { NotAllowedError } from '../../errors/not-allowed-error'
 import { DeleteQuestionUseCase } from './delete-question'
 
 let questionsRepository: InMemoryQuestionsRepository
+let questionAttachmentsRepository: InMemoryQuestionAttachmentsRepository
 let deleteQuestion: DeleteQuestionUseCase
 
 describe('Delete Question', () => {
     beforeEach(() => {
-        questionsRepository = new InMemoryQuestionsRepository()
+        questionAttachmentsRepository = new InMemoryQuestionAttachmentsRepository()
+        questionsRepository = new InMemoryQuestionsRepository(questionAttachmentsRepository)
         deleteQuestion = new DeleteQuestionUseCase(questionsRepository)
     })
 
@@ -19,6 +23,17 @@ describe('Delete Question', () => {
         const newQuestion = makeQuestion()
 
         await questionsRepository.create(newQuestion)
+
+        questionAttachmentsRepository.items.push(
+            makeQuestionAttachment({
+                questionId: newQuestion.id,
+                attachmentId: new UniqueEntityId('1'),
+            }),
+            makeQuestionAttachment({
+                questionId: newQuestion.id,
+                attachmentId: new UniqueEntityId('2'),
+            }),
+        )
 
         const res = await deleteQuestion.execute({
             authorId: newQuestion.authorId.toString(),
@@ -30,6 +45,8 @@ describe('Delete Question', () => {
         if (res.isRight()) {
             expect(questionsRepository.items).toHaveLength(0)
         }
+
+        expect(questionAttachmentsRepository.items).toHaveLength(0)
     })
 
     it('should not be able to delete a question from another user', async () => {
