@@ -8,7 +8,7 @@ export function makeAnswerAttachment(override: Partial<AnswerAttachmentProps> = 
             attachmentId: new UniqueEntityId(),
             ...override,
         },
-        id,
+        id
     )
 
     return answerAttachment

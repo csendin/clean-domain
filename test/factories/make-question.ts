@@ -11,7 +11,7 @@ export function makeQuestion(override: Partial<QuestionProps> = {}, id?: UniqueE
             authorId: new UniqueEntityId(),
             ...override,
         },
-        id,
+        id
     )
 
     return question

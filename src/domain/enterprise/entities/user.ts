@@ -25,7 +25,7 @@ export class User extends Entity<UserProps> {
             {
                 ...props,
             },
-            id,
+            id
         )
 
         return user

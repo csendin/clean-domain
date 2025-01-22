@@ -32,7 +32,7 @@ describe('Edit Answer', () => {
             makeAnswerAttachment({
                 answerId: newAnswer.id,
                 attachmentId: new UniqueEntityId('2'),
-            }),
+            })
         )
 
         const res = await editAnswer.execute({

@@ -20,7 +20,7 @@ export class Attachment extends Entity<AttachmentProps> {
             {
                 ...props,
             },
-            id,
+            id
         )
 
         return attachment

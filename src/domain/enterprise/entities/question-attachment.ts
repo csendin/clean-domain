@@ -20,7 +20,7 @@ export class QuestionAttachment extends Entity<QuestionAttachmentProps> {
             {
                 ...props,
             },
-            id,
+            id
         )
 
         return questionAttachment

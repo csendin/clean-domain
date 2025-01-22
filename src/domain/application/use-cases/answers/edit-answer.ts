@@ -26,7 +26,7 @@ type EditAnswerResponse = Either<
 export class EditAnswerUseCase {
     constructor(
         private answersRepository: AnswersRepository,
-        private answerAttachmentsRepository: AnswerAttachmentsRepository,
+        private answerAttachmentsRepository: AnswerAttachmentsRepository
     ) {}
 
     async execute({ content, authorId, answerId, attachmentsIds }: EditAnswerRequest): Promise<EditAnswerResponse> {

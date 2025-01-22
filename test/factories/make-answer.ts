@@ -11,7 +11,7 @@ export function makeAnswer(override: Partial<AnswerProps> = {}, id?: UniqueEntit
             questionId: new UniqueEntityId(),
             ...override,
         },
-        id,
+        id
     )
 
     return answer

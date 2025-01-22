@@ -18,17 +18,17 @@ describe('Fetch Question Comments', () => {
         await questionCommentsRepository.create(
             makeQuestionComment({
                 questionId: new UniqueEntityId('question-1'),
-            }),
+            })
         )
         await questionCommentsRepository.create(
             makeQuestionComment({
                 questionId: new UniqueEntityId('question-1'),
-            }),
+            })
         )
         await questionCommentsRepository.create(
             makeQuestionComment({
                 questionId: new UniqueEntityId('question-1'),
-            }),
+            })
         )
 
         const res = await fetchQuestionComment.execute({
@@ -48,7 +48,7 @@ describe('Fetch Question Comments', () => {
             await questionCommentsRepository.create(
                 makeQuestionComment({
                     questionId: new UniqueEntityId('question-1'),
-                }),
+                })
             )
         }
 

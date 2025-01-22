@@ -18,17 +18,17 @@ describe('Fetch Answer Comments', () => {
         await answerCommentsRepository.create(
             makeAnswerComment({
                 answerId: new UniqueEntityId('answer-1'),
-            }),
+            })
         )
         await answerCommentsRepository.create(
             makeAnswerComment({
                 answerId: new UniqueEntityId('answer-1'),
-            }),
+            })
         )
         await answerCommentsRepository.create(
             makeAnswerComment({
                 answerId: new UniqueEntityId('answer-1'),
-            }),
+            })
         )
 
         const res = await fetchAnswerComment.execute({
@@ -48,7 +48,7 @@ describe('Fetch Answer Comments', () => {
             await answerCommentsRepository.create(
                 makeAnswerComment({
                     answerId: new UniqueEntityId('answer-1'),
-                }),
+                })
             )
         }
 

@@ -11,7 +11,7 @@ export function makeQuestionComment(override: Partial<QuestionCommentProps> = {}
             questionId: new UniqueEntityId(),
             ...override,
         },
-        id,
+        id
     )
 
     return question
